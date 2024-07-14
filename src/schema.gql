@@ -1,0 +1,141 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Attachment {
+  id: Int!
+  created_at: DateTime!
+  type: String!
+  url: String!
+  tweet: Tweet!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Like {
+  id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  user: User!
+  tweet: Tweet!
+}
+
+type Tweet {
+  id: Int!
+  created_at: DateTime!
+  updated_at: DateTime!
+  numberOfLikes: Int!
+  numberOfComments: Int!
+  content: String!
+  user: User!
+  attachments: [Attachment!]!
+  comments: [Comment!]!
+  likes: [Like!]!
+}
+
+type Comment {
+  id: Int!
+  created_at: DateTime!
+  content: String!
+  user: User!
+  tweet: Tweet!
+}
+
+type User {
+  id: Int!
+  name: String!
+  email: String!
+  password: String!
+  phoneNumber: String!
+  country: String!
+  gender: String!
+  tweets: [Tweet!]!
+  likes: [Like!]!
+  comments: [Comment!]!
+}
+
+type RegisterAndSignInResponse {
+  access_token: String!
+  user: User!
+}
+
+type Query {
+  users: [User!]!
+  tweets: [Tweet!]!
+  tweet(id: Float!): Tweet!
+  comments: [Comment!]!
+}
+
+type Mutation {
+  addUser(AddUserInput: AddUserInput!): User!
+  removeUser(userId: Float!): User!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  addTweet(addTweetInput: AddTweetInput!): Tweet!
+  updateTweet(updateTweetInput: UpdateTweetInput!): Tweet!
+  register(registerBody: RegisterUserDto!): RegisterAndSignInResponse!
+  login(loginBody: LoginUserDto!): RegisterAndSignInResponse!
+  addComment(addCommentInput: AddCommentInput!): Comment!
+  addAttachment(addAttachmentInput: addAttachmentInput!): Attachment!
+}
+
+input AddUserInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  id: Float!
+  attr: UpdateUserAttrInput!
+}
+
+input UpdateUserAttrInput {
+  name: String
+  email: String
+  password: String
+  country: String
+  phoneNumber: String
+  gender: String
+}
+
+input AddTweetInput {
+  content: String!
+  user: Float!
+}
+
+input UpdateTweetInput {
+  id: Float!
+  attr: UpdateTweetAttrInput!
+}
+
+input UpdateTweetAttrInput {
+  numberOfLikes: Float
+  numberOfComments: Float
+  content: String
+}
+
+input RegisterUserDto {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input LoginUserDto {
+  email: String!
+  password: String!
+}
+
+input AddCommentInput {
+  content: String!
+  user: Float!
+  tweet: Float!
+}
+
+input addAttachmentInput {
+  url: String!
+  type: String!
+  tweet: Float!
+}
