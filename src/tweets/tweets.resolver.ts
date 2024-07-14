@@ -7,6 +7,7 @@ import { UpdateTweetInput } from './inputs/update-tweet.input';
 @Resolver()
 export class TweetsResolver {
   constructor(private tweetsService: TweetsService) {}
+
   @Query(() => [Tweet])
   tweets() {
     return this.tweetsService.findAllTweets();

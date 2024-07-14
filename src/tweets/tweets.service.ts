@@ -8,8 +8,9 @@ import { AddTweetDto } from './dtos/add-tweet.dto';
 @Injectable()
 export class TweetsService {
   constructor(@InjectRepository(Tweet) private tweetRepo: Repository<Tweet>) {}
-  findAllTweets() {
-    return this.tweetRepo.find({
+
+  async findAllTweets(): Promise<Tweet[]> {
+    return await this.tweetRepo.find({
       relations: ['user', 'comments', 'attachments', 'likes'],
     });
   }
