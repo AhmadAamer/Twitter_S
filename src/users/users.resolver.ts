@@ -36,14 +36,14 @@ export class UsersResolver {
   }
 
   //?Check
-  // @ResolveField('comments', () => [Comment])
-  // getComments(
-  //   @Parent() user: User,
-  //   @Context() { loaders }: { loaders: IDataloaders },
-  // ) {
-  //   const { id: userId } = user;
-  //   return loaders.commentsDataloader.load(userId);
-  // }
+  @ResolveField('comments', () => [Comment])
+  getComments(
+    @Parent() user: User,
+    @Context() { loaders }: { loaders: IDataloaders },
+  ) {
+    const { id: userId } = user;
+    return loaders.commentsDataloader.load(userId);
+  }
 
   @Mutation(() => GqlUserResponse)
   async addUser(@Args('AddUserInput') AddUserInput: AddUserInput) {

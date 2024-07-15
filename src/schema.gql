@@ -76,13 +76,14 @@ type RegisterAndSignInResponse {
 }
 
 type Query {
+  comments: [Comment!]!
   users: GqlUsersResponse!
   tweets: [Tweet!]!
   tweet(id: Float!): Tweet!
-  comments: [Comment!]!
 }
 
 type Mutation {
+  addComment(addCommentInput: AddCommentInput!): Comment!
   addUser(AddUserInput: AddUserInput!): GqlUserResponse!
   removeUser(userId: Float!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
@@ -90,8 +91,13 @@ type Mutation {
   updateTweet(updateTweetInput: UpdateTweetInput!): Tweet!
   register(registerBody: RegisterUserDto!): RegisterAndSignInResponse!
   login(loginBody: LoginUserDto!): RegisterAndSignInResponse!
-  addComment(addCommentInput: AddCommentInput!): Comment!
   addAttachment(addAttachmentInput: addAttachmentInput!): Attachment!
+}
+
+input AddCommentInput {
+  content: String!
+  user: Float!
+  tweet: Float!
 }
 
 input AddUserInput {
@@ -139,12 +145,6 @@ input RegisterUserDto {
 input LoginUserDto {
   email: String!
   password: String!
-}
-
-input AddCommentInput {
-  content: String!
-  user: Float!
-  tweet: Float!
 }
 
 input addAttachmentInput {

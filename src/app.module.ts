@@ -43,22 +43,31 @@ import { DataloaderService } from './dataloader/dataloader.service';
         };
       },
     }),
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
-      context: ({ req, res }) => ({ req, res }),
-      formatError: (error: GraphQLError): GraphQLFormattedError => {
-        const graphQLFormattedError: GraphQLFormattedError = {
-          message: error.message,
-          locations: error.locations,
-          path: error.path,
-          extensions: {
-            code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
-            timestamp: new Date().toISOString(),
-            path: error.path?.[0] || null,
+      imports: [DataloaderModule],
+      useFactory: (dataloaderService: DataloaderService) => {
+        return {
+          autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+          context: ({ req, res }) => ({
+            req,
+            res,
+            loaders: dataloaderService.getLoaders(),
+          }),
+          formatError: (error: GraphQLError): GraphQLFormattedError => {
+            const graphQLFormattedError: GraphQLFormattedError = {
+              message: error.message,
+              locations: error.locations,
+              path: error.path,
+              extensions: {
+                code: error.extensions?.code || 'INTERNAL_SERVER_ERROR',
+                timestamp: new Date().toISOString(),
+                path: error.path?.[0] || null,
+              },
+            };
+            return graphQLFormattedError;
           },
         };
-        return graphQLFormattedError;
       },
     }),
     UsersModule,
@@ -76,17 +85,3 @@ export class AppModule implements NestModule {
     consumer.apply().forRoutes();
   }
 }
-
-// GraphQLModule.forRootAsync<ApolloDriverConfig>({
-//   driver: ApolloDriver,
-//   imports: [DataloaderModule],
-//   useFactory: (dataloaderService: DataloaderService) => {
-//     return {
-//       autoSchemaFile: true,
-//       context: () => ({
-//         loaders: dataloaderService.getLoaders(),
-//       }),
-//     };
-//   },
-//   inject: [DataloaderService],
-// }),
