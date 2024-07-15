@@ -5,6 +5,6 @@ import { CommentsModule } from 'src/comments/comments.module';
 @Module({
   imports: [CommentsModule],
   providers: [DataloaderService],
-  exports: [DataloaderModule],
+  exports: [DataloaderService],
 })
 export class DataloaderModule {}

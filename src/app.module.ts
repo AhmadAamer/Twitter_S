@@ -69,6 +69,7 @@ import { DataloaderService } from './dataloader/dataloader.service';
           },
         };
       },
+      inject: [DataloaderService],
     }),
     UsersModule,
     TweetsModule,
