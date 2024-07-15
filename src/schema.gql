@@ -77,18 +77,18 @@ type RegisterAndSignInResponse {
 
 type Query {
   comments: [Comment!]!
-  users: GqlUsersResponse!
   tweets: [Tweet!]!
   tweet(id: Float!): Tweet!
+  users: GqlUsersResponse!
 }
 
 type Mutation {
   addComment(addCommentInput: AddCommentInput!): Comment!
+  addTweet(addTweetInput: AddTweetInput!): Tweet!
+  updateTweet(updateTweetInput: UpdateTweetInput!): Tweet!
   addUser(AddUserInput: AddUserInput!): GqlUserResponse!
   removeUser(userId: Float!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
-  addTweet(addTweetInput: AddTweetInput!): Tweet!
-  updateTweet(updateTweetInput: UpdateTweetInput!): Tweet!
   register(registerBody: RegisterUserDto!): RegisterAndSignInResponse!
   login(loginBody: LoginUserDto!): RegisterAndSignInResponse!
   addAttachment(addAttachmentInput: addAttachmentInput!): Attachment!
@@ -98,6 +98,22 @@ input AddCommentInput {
   content: String!
   user: Float!
   tweet: Float!
+}
+
+input AddTweetInput {
+  content: String!
+  user: Float!
+}
+
+input UpdateTweetInput {
+  id: Float!
+  attr: UpdateTweetAttrInput!
+}
+
+input UpdateTweetAttrInput {
+  numberOfLikes: Float
+  numberOfComments: Float
+  content: String
 }
 
 input AddUserInput {
@@ -118,22 +134,6 @@ input UpdateUserAttrInput {
   country: String
   phoneNumber: String
   gender: String
-}
-
-input AddTweetInput {
-  content: String!
-  user: Float!
-}
-
-input UpdateTweetInput {
-  id: Float!
-  attr: UpdateTweetAttrInput!
-}
-
-input UpdateTweetAttrInput {
-  numberOfLikes: Float
-  numberOfComments: Float
-  content: String
 }
 
 input RegisterUserDto {

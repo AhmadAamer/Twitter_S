@@ -11,8 +11,29 @@ export class TweetsService {
 
   async findAllTweets(): Promise<Tweet[]> {
     return await this.tweetRepo.find({
-      relations: ['user', 'comments', 'attachments', 'likes'],
+      relations: ['user', 'tweets', 'attachments', 'likes'],
     });
+  }
+
+  async findAllTweetsByUserIds(userIds: readonly number[]): Promise<Tweet[]> {
+    const tweets = await this.tweetRepo.find({
+      relations: ['user'],
+    });
+    return tweets.filter((tweet) => userIds.includes(tweet.user.id));
+  }
+
+  async getUsersTweetsByBatch(
+    userIds: readonly number[],
+  ): Promise<(Tweet | any)[]> {
+    const tweets = await this.findAllTweetsByUserIds(userIds);
+    const mappedResults = this._mapResultToIds(userIds, tweets);
+    return mappedResults;
+  }
+
+  private _mapResultToIds(userIds: readonly number[], tweets: Tweet[]) {
+    return userIds.map(
+      (id) => tweets.filter((tweet: Tweet) => tweet.user.id === id) || null,
+    );
   }
 
   async findTweetById(id: number): Promise<Tweet> {

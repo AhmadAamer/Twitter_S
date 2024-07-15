@@ -7,5 +7,6 @@ import { TweetsResolver } from './tweets.resolver';
 @Module({
   imports: [TypeOrmModule.forFeature([Tweet])],
   providers: [TweetsService, TweetsResolver],
+  exports: [TweetsService],
 })
 export class TweetsModule {}

@@ -3,14 +3,21 @@ import * as DataLoader from 'dataloader';
 import { CommentsService } from 'src/comments/comments.service';
 import { IDataloaders } from './dataloader.interface';
 import { Comment } from 'src/comments/comment.entity';
+import { Tweet } from 'src/tweets/tweet.entity';
+import { TweetsService } from 'src/tweets/tweets.service';
 @Injectable()
 export class DataloaderService {
-  constructor(private readonly commentsService: CommentsService) {}
+  constructor(
+    private readonly commentsService: CommentsService,
+    private tweetsService: TweetsService,
+  ) {}
 
   getLoaders(): IDataloaders {
     const commentsDataloader = this._createCommentsLoader();
+    const tweetsDataloader = this._createTweetsLoader();
     return {
       commentsDataloader,
+      tweetsDataloader,
     };
   }
 
@@ -20,28 +27,11 @@ export class DataloaderService {
         await this.commentsService.getUsersCommentsByBatch(keys as number[]),
     );
   }
+
+  private _createTweetsLoader() {
+    return new DataLoader<number, Tweet>(
+      async (keys: readonly number[]) =>
+        await this.tweetsService.getUsersTweetsByBatch(keys as number[]),
+    );
+  }
 }
-
-// import { Injectable } from '@nestjs/common';
-// import { Friend } from '../friend/friend.entity';
-// import { FriendService } from '../friend/friend.service';
-// import { IDataloaders } from './dataloader.interface';
-
-// @Injectable()
-// export class DataloaderService {
-//   constructor(private readonly friendService: FriendService) {}
-
-//   getLoaders(): IDataloaders {
-//     const friendsLoader = this._createFriendsLoader();
-//     return {
-//       friendsLoader,
-//     };
-//   }
-
-//   private _createFriendsLoader() {
-//     return new DataLoader<number, Friend>(
-//       async (keys: readonly number[]) =>
-//         await this.friendService.getStudentsFriendsByBatch(keys as number[]),
-//     );
-//   }
-// }

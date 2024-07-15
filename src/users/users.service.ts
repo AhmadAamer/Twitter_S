@@ -12,7 +12,7 @@ export class UsersService {
   ) {}
 
   async getAllUsers() {
-    return await this.usersRepo.find({ relations: ['tweets'] });
+    return await this.usersRepo.find({});
   }
 
   async findUserByEmail(email: string): Promise<User> {

@@ -13,6 +13,7 @@ export class CommentsService {
   findAllComments() {
     return this.commentRepo.find({ relations: ['user', 'tweet'] });
   }
+
   async findAllCommentsByUserIds(
     userIds: readonly number[],
   ): Promise<Comment[]> {

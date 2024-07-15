@@ -17,6 +17,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwtAuthGuard';
 import { Comment } from 'src/comments/comment.entity';
 import { IDataloaders } from 'src/dataloader/dataloader.interface';
 import { generateGqlResponse } from 'src/utils/gql-general-res';
+import { Tweet } from 'src/tweets/tweet.entity';
 
 export const GqlUserResponse = generateGqlResponse(User);
 export const GqlUsersResponse = generateGqlResponse(Array(User), true);
@@ -43,6 +44,15 @@ export class UsersResolver {
   ) {
     const { id: userId } = user;
     return loaders.commentsDataloader.load(userId);
+  }
+
+  @ResolveField('tweets', () => [Tweet])
+  getTweets(
+    @Parent() user: User,
+    @Context() { loaders }: { loaders: IDataloaders },
+  ) {
+    const { id: userId } = user;
+    return loaders.tweetsDataloader.load(userId);
   }
 
   @Mutation(() => GqlUserResponse)
