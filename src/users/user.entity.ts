@@ -5,6 +5,7 @@ import { Tweet } from 'src/tweets/tweet.entity';
 
 import {
   Column,
+  CreateDateColumn,
   Entity,
   ManyToMany,
   OneToMany,
@@ -29,6 +30,11 @@ export class User {
   @Column({ type: 'varchar' })
   @Field()
   password: string;
+
+  @Column({ nullable: true })
+  @Field(() => Date)
+  @CreateDateColumn()
+  created_at?: Date;
 
   @Column({ type: 'varchar', nullable: true })
   @Field()

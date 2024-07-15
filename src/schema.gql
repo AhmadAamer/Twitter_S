@@ -49,6 +49,7 @@ type User {
   name: String!
   email: String!
   password: String!
+  created_at: DateTime!
   phoneNumber: String!
   country: String!
   gender: String!
@@ -57,20 +58,32 @@ type User {
   comments: [Comment!]!
 }
 
+type GqlUserResponse {
+  data: User!
+  status: String!
+  message: String!
+}
+
+type GqlUsersResponse {
+  data: [User!]!
+  status: String!
+  message: String!
+}
+
 type RegisterAndSignInResponse {
   access_token: String!
   user: User!
 }
 
 type Query {
-  users: [User!]!
+  users: GqlUsersResponse!
   tweets: [Tweet!]!
   tweet(id: Float!): Tweet!
   comments: [Comment!]!
 }
 
 type Mutation {
-  addUser(AddUserInput: AddUserInput!): User!
+  addUser(AddUserInput: AddUserInput!): GqlUserResponse!
   removeUser(userId: Float!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
   addTweet(addTweetInput: AddTweetInput!): Tweet!

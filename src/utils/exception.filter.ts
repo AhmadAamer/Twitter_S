@@ -27,7 +27,7 @@ export class AllExceptionsFilter implements GqlExceptionFilter {
       message = typeof res === 'string' ? res : (res as any).message;
     }
 
-    // this.logger.error(`Status: ${status}, Error: ${JSON.stringify(exception)}`);
+    this.logger.warn(`Status: ${status}, Error: ${JSON.stringify(exception)}`);
 
     // Return a GraphQL-friendly error without exposing the stack trace
     return new ApolloError(message, `${status}`, {

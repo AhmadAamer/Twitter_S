@@ -17,6 +17,8 @@ import { Like } from './likes/like.entity';
 import { Comment } from './comments/comment.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
+import { DataloaderModule } from './dataloader/dataloader.module';
+import { DataloaderService } from './dataloader/dataloader.service';
 
 @Module({
   imports: [
@@ -56,12 +58,6 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
             path: error.path?.[0] || null,
           },
         };
-
-        // Remove stack trace in production
-        if (process.env.NODE_ENV === 'production') {
-          delete (graphQLFormattedError.extensions as any).exception;
-        }
-
         return graphQLFormattedError;
       },
     }),
@@ -71,6 +67,7 @@ import { GraphQLError, GraphQLFormattedError } from 'graphql';
     LikesModule,
     CommentsModule,
     AttachmentsModule,
+    DataloaderModule,
   ],
   providers: [AppService],
 })
@@ -79,3 +76,17 @@ export class AppModule implements NestModule {
     consumer.apply().forRoutes();
   }
 }
+
+// GraphQLModule.forRootAsync<ApolloDriverConfig>({
+//   driver: ApolloDriver,
+//   imports: [DataloaderModule],
+//   useFactory: (dataloaderService: DataloaderService) => {
+//     return {
+//       autoSchemaFile: true,
+//       context: () => ({
+//         loaders: dataloaderService.getLoaders(),
+//       }),
+//     };
+//   },
+//   inject: [DataloaderService],
+// }),
