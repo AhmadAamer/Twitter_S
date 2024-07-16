@@ -5,29 +5,21 @@ import { CreateFollowInput } from './dto/create-follow.input';
 import { UpdateFollowInput } from './dto/update-follow.input';
 import { generateGqlResponse } from 'src/utils/gql-general-res';
 
+//generate responses..
 export const GqlFollowResponse = generateGqlResponse(Follow);
 export const GqlFollowsResponse = generateGqlResponse(Array(Follow), true);
+
 @Resolver(() => Follow)
 export class FollowResolver {
   constructor(private readonly followService: FollowService) {}
-
-  @Mutation(() => GqlFollowResponse)
-  createFollow(
-    @Args('createFollowInput') createFollowInput: CreateFollowInput,
-  ) {
-    return this.followService.create(createFollowInput);
-  }
-
   @Query(() => GqlFollowsResponse)
   async follows() {
-    const res = await this.followService.findAll();
-    console.log(res);
-    return res;
+    return await this.followService.findAll();
   }
 
-  @Query(() => GqlFollowResponse)
-  follow(@Args('id') id: number) {
-    return this.followService.findOne(id);
+  @Mutation(() => GqlFollowResponse)
+  addFollow(@Args('createFollowInput') createFollowInput: CreateFollowInput) {
+    return this.followService.addFollow(createFollowInput);
   }
 
   @Mutation(() => String)

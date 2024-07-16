@@ -4,6 +4,7 @@
   "HTTP_UNAUTHORIZED": "Unauthorized",
   "HTTP_FORBIDDEN": "Forbidden",
   "HTTP_NOT_FOUND": "Not Found",
+  "HTTP_USER NOT FOUND": "this user not found",
   "HTTP_METHOD_NOT_ALLOWED": "Method Not Allowed",
   "HTTP_REQUEST_TIMEOUT": "Request Timeout",
   "HTTP_CONFLICT": "Conflict",

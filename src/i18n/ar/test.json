@@ -4,6 +4,7 @@
   "HTTP_UNAUTHORIZED": "غير مصرح",
   "HTTP_FORBIDDEN": "ممنوع",
   "HTTP_NOT_FOUND": "غير موجود",
+  "HTTP_USER NOT FOUND": "هذا المستخدم غير موجود",
   "HTTP_METHOD_NOT_ALLOWED": "الطريقة غير مسموحة",
   "HTTP_REQUEST_TIMEOUT": "انتهت مهلة الطلب",
   "HTTP_CONFLICT": "تعارض",

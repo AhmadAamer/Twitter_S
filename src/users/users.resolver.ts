@@ -35,6 +35,15 @@ export class UsersResolver {
       data: users,
     };
   }
+  @Query(() => GqlUserResponse)
+  async user(@Args('id') id: number) {
+    const user = await this.usersService.findUserById(id);
+    return {
+      status: 'success',
+      message: 'user fetched successfully',
+      data: user,
+    };
+  }
 
   //?Check
   @ResolveField('comments', () => [Comment])

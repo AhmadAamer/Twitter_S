@@ -100,8 +100,8 @@ type Query {
   tweets: [Tweet!]!
   tweet(id: Float!): Tweet!
   users: GqlUsersResponse!
+  user(id: Float!): GqlUserResponse!
   follows: GqlFollowsResponse!
-  follow(id: Float!): GqlFollowResponse!
 }
 
 type Mutation {
@@ -114,7 +114,7 @@ type Mutation {
   register(registerBody: RegisterUserDto!): RegisterAndSignInResponse!
   login(loginBody: LoginUserDto!): RegisterAndSignInResponse!
   addAttachment(addAttachmentInput: addAttachmentInput!): Attachment!
-  createFollow(createFollowInput: CreateFollowInput!): GqlFollowResponse!
+  addFollow(createFollowInput: CreateFollowInput!): GqlFollowResponse!
   removeFollow(id: Float!): String!
 }
 
