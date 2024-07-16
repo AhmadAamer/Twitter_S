@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
@@ -12,7 +16,9 @@ export class UsersService {
   ) {}
 
   async getAllUsers() {
-    return await this.usersRepo.find({});
+    return await this.usersRepo.find({
+      relations: ['followers', 'followings'],
+    });
   }
 
   async findUserByEmail(email: string): Promise<User> {
@@ -26,6 +32,9 @@ export class UsersService {
   async addUser(addUserDto: AddUserDto) {
     const { name, email, password } = addUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
+    const exist = await this.usersRepo.findOne({ where: { email } });
+    if (exist) throw new BadRequestException('choose another email');
+
     const newUser = this.usersRepo.create({
       name,
       email,
@@ -34,10 +43,10 @@ export class UsersService {
     return this.usersRepo.save(newUser);
   }
 
-  async removeUser(id: number): Promise<User> {
+  async removeUser(id: number) {
     const user = await this.usersRepo.findOne({ where: { id } });
-    if (!user) throw new NotFoundException('user not found!');
-    return this.usersRepo.remove(user);
+    if (!user) throw new NotFoundException();
+    return await this.usersRepo.remove(user);
   }
   async updateUser(id: number, attr: Partial<User>): Promise<User> {
     const user = await this.usersRepo.findOne({ where: { id } });

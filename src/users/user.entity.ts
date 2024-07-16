@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Comment } from 'src/comments/comment.entity';
+import { Follow } from 'src/follow/entities/follow.entity';
 import { Like } from 'src/likes/like.entity';
 import { Tweet } from 'src/tweets/tweet.entity';
 
@@ -64,9 +65,11 @@ export class User {
   @OneToMany(() => Comment, (comment) => comment.user)
   comments?: Comment[];
 
-  @Column({ nullable: true })
-  verificationCode: string;
+  @Field(() => [Follow], { nullable: true })
+  @OneToMany(() => Follow, (follow) => follow.follower)
+  followers?: Follow[];
 
-  @Column({ default: false })
-  isVerified: boolean;
+  @Field(() => [Follow], { nullable: true })
+  @OneToMany(() => Follow, (follow) => follow.following)
+  followings?: Follow[];
 }

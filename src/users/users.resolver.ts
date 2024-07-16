@@ -66,8 +66,9 @@ export class UsersResolver {
   }
 
   @Mutation(() => User)
-  async removeUser(@Args('userId') userId: number): Promise<User> {
-    return await this.usersService.removeUser(userId);
+  async removeUser(@Args('userId') userId: number) {
+    const user = await this.usersService.removeUser(userId);
+    return user;
   }
 
   @UseGuards(JwtAuthGuard)

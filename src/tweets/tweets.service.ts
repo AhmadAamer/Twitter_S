@@ -11,7 +11,7 @@ export class TweetsService {
 
   async findAllTweets(): Promise<Tweet[]> {
     return await this.tweetRepo.find({
-      relations: ['user', 'tweets', 'attachments', 'likes'],
+      relations: ['user', 'tweets', 'attachments', 'likes', 'comments'],
     });
   }
 
@@ -39,9 +39,9 @@ export class TweetsService {
   async findTweetById(id: number): Promise<Tweet> {
     const tweet = await this.tweetRepo.findOne({
       where: { id },
-      relations: ['user', 'attachments'],
+      relations: ['user', 'attachments', 'comments'],
     });
-    if (!tweet) throw new NotFoundException('no tweet with this id ');
+    if (!tweet) throw new NotFoundException();
     return tweet;
   }
 

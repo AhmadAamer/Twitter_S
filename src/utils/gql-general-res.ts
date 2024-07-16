@@ -21,7 +21,7 @@ export function generateGqlResponse<TItem extends object>(
         @Field()
         message: string;
       }
-      console.log(TItemClass[0].name);
+      // console.log(TItemClass[0].name);
 
       return GqlResponse;
     } else {
@@ -60,7 +60,7 @@ export function generateGqlResponse<TItem extends object>(
       @Field()
       message: string;
     }
-    console.log(TItemClass.name);
+    // console.log(TItemClass.name);
 
     return GqlResponse;
   }

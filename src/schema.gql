@@ -44,6 +44,12 @@ type Comment {
   tweet: Tweet!
 }
 
+type Follow {
+  id: Int!
+  follower: User!
+  following: User!
+}
+
 type User {
   id: Int!
   name: String!
@@ -56,6 +62,8 @@ type User {
   tweets: [Tweet!]!
   likes: [Like!]!
   comments: [Comment!]!
+  followers: [Follow!]
+  followings: [Follow!]
 }
 
 type GqlUserResponse {
@@ -75,11 +83,25 @@ type RegisterAndSignInResponse {
   user: User!
 }
 
+type GqlFollowResponse {
+  data: Follow!
+  status: String!
+  message: String!
+}
+
+type GqlFollowsResponse {
+  data: [Follow!]!
+  status: String!
+  message: String!
+}
+
 type Query {
   comments: [Comment!]!
   tweets: [Tweet!]!
   tweet(id: Float!): Tweet!
   users: GqlUsersResponse!
+  follows: GqlFollowsResponse!
+  follow(id: Float!): GqlFollowResponse!
 }
 
 type Mutation {
@@ -92,6 +114,8 @@ type Mutation {
   register(registerBody: RegisterUserDto!): RegisterAndSignInResponse!
   login(loginBody: LoginUserDto!): RegisterAndSignInResponse!
   addAttachment(addAttachmentInput: addAttachmentInput!): Attachment!
+  createFollow(createFollowInput: CreateFollowInput!): GqlFollowResponse!
+  removeFollow(id: Float!): String!
 }
 
 input AddCommentInput {
@@ -151,4 +175,9 @@ input addAttachmentInput {
   url: String!
   type: String!
   tweet: Float!
+}
+
+input CreateFollowInput {
+  follower_id: Int!
+  following_id: Int!
 }

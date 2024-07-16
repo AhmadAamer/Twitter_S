@@ -5,12 +5,14 @@ import { AddUserDto } from 'src/users/dtos/add-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { PayloadInterface } from './interfaces/payload.interface';
 import { LoginUserDto } from './dtos/login-user.dto';
+import { I18nService } from 'nestjs-i18n';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    i18n: I18nService,
   ) {}
 
   async validateJwtUser(id: number) {
@@ -36,10 +38,6 @@ export class AuthService {
     };
   }
   async register(registerationBody: AddUserDto) {
-    const checkUser = await this.usersService.findUserByEmail(
-      registerationBody.email,
-    );
-    if (checkUser) throw new BadRequestException('choose another email');
     const user = await this.usersService.addUser(registerationBody);
     const payload: PayloadInterface = { id: user.id };
     return {

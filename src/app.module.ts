@@ -19,6 +19,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { DataloaderModule } from './dataloader/dataloader.module';
 import { DataloaderService } from './dataloader/dataloader.service';
+import {
+  AcceptLanguageResolver,
+  HeaderResolver,
+  I18nModule,
+  QueryResolver,
+} from 'nestjs-i18n';
+import * as path from 'path';
+import { watch } from 'fs';
+import { FollowModule } from './follow/follow.module';
+import { Follow } from './follow/entities/follow.entity';
 
 @Module({
   imports: [
@@ -36,7 +46,7 @@ import { DataloaderService } from './dataloader/dataloader.service';
           port: config.get<number>('DB_PORT'),
           password: config.get<string>('DB_PASSWORD'),
           username: config.get<string>('DB_USERNAME'),
-          entities: [User, Tweet, Attachment, Like, Comment],
+          entities: [User, Tweet, Attachment, Like, Comment, Follow],
           database: 'twitter_s',
           synchronize: true,
           logging: false,
@@ -71,6 +81,17 @@ import { DataloaderService } from './dataloader/dataloader.service';
       },
       inject: [DataloaderService],
     }),
+    I18nModule.forRoot({
+      fallbackLanguage: 'en',
+      loaderOptions: {
+        path: path.join('./dist/i18n/'),
+        watch: true,
+      },
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+      ],
+    }),
     UsersModule,
     TweetsModule,
     AuthModule,
@@ -78,6 +99,7 @@ import { DataloaderService } from './dataloader/dataloader.service';
     CommentsModule,
     AttachmentsModule,
     DataloaderModule,
+    FollowModule,
   ],
   providers: [AppService],
 })
