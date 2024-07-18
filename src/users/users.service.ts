@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
-import { Repository } from 'typeorm';
+import { QueryRunner, Repository } from 'typeorm';
 import { AddUserDto } from './dtos/add-user.dto';
 import * as bcrypt from 'bcryptjs';
 import { RoleService } from 'src/role/role.service';
@@ -23,18 +23,20 @@ export class UsersService {
       relations: ['followers', 'followings', 'role'],
     });
   }
+
   async getAdmins() {
     const roleAdmin = await this.rolesRepo.findOne({
       where: { name: 'admin' },
+      relations: ['users'],
     });
-    console.log(roleAdmin.id);
+    console.log(roleAdmin);
 
     const admins = await this.usersRepo.find({
       where: {},
       relations: ['role'],
     });
 
-    return admins;
+    return 'admins';
   }
 
   async findUserByEmail(email: string): Promise<User> {
@@ -45,7 +47,7 @@ export class UsersService {
     return await this.usersRepo.findOne({ where: { id }, relations: ['role'] });
   }
 
-  async addUser(addUserDto: AddUserDto) {
+  async addUser(addUserDto: AddUserDto, queryRunner?: QueryRunner) {
     const { name, email, password } = addUserDto;
     const hashedPassword = await bcrypt.hash(password, 10);
     const exist = await this.usersRepo.findOne({ where: { email } });
@@ -56,7 +58,11 @@ export class UsersService {
       email,
       password: hashedPassword,
     });
-    return this.usersRepo.save(newUser);
+    if (queryRunner) {
+      return await queryRunner.manager.save(newUser);
+    } else {
+      return this.usersRepo.save(newUser);
+    }
   }
 
   async removeUser(id: number) {
@@ -65,9 +71,19 @@ export class UsersService {
     return await this.usersRepo.remove(user);
   }
   async updateUser(id: number, attr: Partial<User>): Promise<User> {
-    const user = await this.usersRepo.findOne({ where: { id } });
+    const user = await this.usersRepo.findOne({
+      where: { id },
+      relations: ['role'],
+    });
     if (!user) throw new NotFoundException('this user is not exist');
     Object.assign(user, attr);
     return this.usersRepo.save(user);
+  }
+  async verifyUser(email: string): Promise<void> {
+    const user = await this.usersRepo.findOne({ where: { email } });
+    if (user) {
+      user.isverified = true;
+      await this.usersRepo.save(user);
+    }
   }
 }

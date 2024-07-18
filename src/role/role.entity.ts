@@ -19,6 +19,6 @@ export class Role {
   permissions: string[];
 
   @Field(() => [User], { nullable: true })
-  @OneToMany(() => User, (user) => user.role)
+  @OneToMany(() => User, (user) => user.role, { onDelete: 'SET NULL' })
   users?: User[];
 }

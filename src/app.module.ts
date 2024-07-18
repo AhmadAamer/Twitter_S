@@ -35,6 +35,7 @@ import { Role } from './role/role.entity';
 import { ContextModule } from './context/context.module';
 import { ContextService } from './context/context.service';
 import { JwtService } from '@nestjs/jwt';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -112,6 +113,7 @@ import { JwtService } from '@nestjs/jwt';
     FollowModule,
     RoleModule,
     ContextModule,
+    EmailModule,
   ],
   providers: [AppService, ContextService, JwtService],
 })

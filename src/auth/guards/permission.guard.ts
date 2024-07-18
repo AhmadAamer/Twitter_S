@@ -24,23 +24,12 @@ export class PermissionsGuard implements CanActivate {
       return true;
     }
 
-    console.log(requiredPermissions);
-
-    // console.log();
-
     const ctx = GqlExecutionContext.create(context);
     const user = await ctx.getContext().user;
-    // console.log('user from permission guard', user);
 
     const { permissions } = await this.roleRepo.findOne({
       where: { id: user.role.id },
     });
-    console.log(permissions);
-
-    // if (requiredPermissions.length !== permissions.length) {
-    //   console.log('here');
-    //   return false;
-    // }
 
     return requiredPermissions.every((permission) =>
       permissions.includes(permission),

@@ -71,7 +71,7 @@ type User {
   comments: [Comment!]!
   followers: [Follow!]
   followings: [Follow!]
-  role: Role!
+  role: Role
 }
 
 type GqlUserResponse {
@@ -108,8 +108,9 @@ type Query {
   tweets: [Tweet!]!
   tweet(id: Float!): Tweet!
   users: GqlUsersResponse!
-  admins: [User!]!
+  admins: String!
   user(id: Float!): GqlUserResponse!
+  verifyEmail(token: String!): Boolean!
   follows: GqlFollowsResponse!
 }
 

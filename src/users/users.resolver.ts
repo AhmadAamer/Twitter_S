@@ -19,6 +19,9 @@ import { IDataloaders } from 'src/dataloader/dataloader.interface';
 import { generateGqlResponse } from 'src/utils/gql-general-res';
 import { Tweet } from 'src/tweets/tweet.entity';
 import { UserGuard } from 'src/auth/guards/user-guard';
+import { Permissions } from 'src/decorators/permissions.decorator';
+import { Permission } from 'src/enums/permission.enum';
+import { PermissionsGuard } from 'src/auth/guards/permission.guard';
 
 export const GqlUserResponse = generateGqlResponse(User);
 export const GqlUsersResponse = generateGqlResponse(Array(User), true);
@@ -27,6 +30,9 @@ export const GqlUsersResponse = generateGqlResponse(Array(User), true);
 export class UsersResolver {
   constructor(private readonly usersService: UsersService) {}
 
+  @UseGuards(JwtAuthGuard)
+  @Permissions(Permission.ViewAllUsers)
+  @UseGuards(PermissionsGuard)
   @Query(() => GqlUsersResponse)
   async users() {
     const users = await this.usersService.getAllUsers();
@@ -37,11 +43,14 @@ export class UsersResolver {
     };
   }
 
-  @Query(() => [User])
+  @Query(() => String)
   async admins() {
     return await this.usersService.getAdmins();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Permissions(Permission.ViewAllUsers)
+  @UseGuards(PermissionsGuard)
   @Query(() => GqlUserResponse)
   async user(@Args('id') id: number) {
     const user = await this.usersService.findUserById(id);

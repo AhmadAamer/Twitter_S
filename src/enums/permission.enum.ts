@@ -3,4 +3,7 @@ export enum Permission {
   EditTweet = 'edit_Tweet',
   DeleteTweet = 'delete_Tweet',
   ViewTweet = 'view_post',
+  ViewAllTweets = 'view_all_tweets',
+  ViewAllUsers = 'view_all_users',
+  DeleteUser = 'delete_user',
 }

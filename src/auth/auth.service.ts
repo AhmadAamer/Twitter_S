@@ -10,12 +10,16 @@ import * as bcrypt from 'bcryptjs';
 import { PayloadInterface } from './interfaces/payload.interface';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { I18nService } from 'nestjs-i18n';
+import { getConnection } from 'typeorm';
+import { generateVerificationToken } from 'src/utils/verification-token';
+import { EmailService } from 'src/email/email.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
+    private emailService: EmailService,
     i18n: I18nService,
   ) {}
 
@@ -55,4 +59,41 @@ export class AuthService {
       user,
     };
   }
+  // async register(registerationBody: AddUserDto) {
+  //   const connection = getConnection();
+  //   const queryRunner = connection.createQueryRunner();
+  //   await queryRunner.connect();
+  //   await queryRunner.startTransaction();
+
+  //   try {
+  //     const user = await this.usersService.addUser(
+  //       registerationBody,
+  //       queryRunner,
+  //     );
+
+  //     const payload: PayloadInterface = { id: user.id };
+  //     const accessToken = this.jwtService.sign(payload, { expiresIn: '1D' });
+
+  //     const token = generateVerificationToken(user.email);
+  //     console.log(token);
+
+  //     const verificationUrl = `http://localhost:3000/graphql`;
+  //     await this.emailService.sendMail(
+  //       user.email,
+  //       'Verify your email',
+  //       `your token is ${token} , Verify it here .. ${verificationUrl}`,
+  //     );
+
+  //     await queryRunner.commitTransaction();
+  //     return {
+  //       access_token: accessToken,
+  //       user,
+  //     };
+  //   } catch (error) {
+  //     await queryRunner.rollbackTransaction();
+  //     throw new Error('Registration failed');
+  //   } finally {
+  //     await queryRunner.release();
+  //   }
+  // }
 }

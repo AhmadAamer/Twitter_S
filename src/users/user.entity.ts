@@ -74,7 +74,10 @@ export class User {
   @OneToMany(() => Follow, (follow) => follow.following)
   followings?: Follow[];
 
-  @Field(() => Role)
-  @ManyToOne(() => Role, (role) => role.users)
+  @Field(() => Role, { nullable: true })
+  @ManyToOne(() => Role, (role) => role.users, { onDelete: 'SET NULL' })
   role?: number;
+
+  @Column({ default: false })
+  isverified: boolean;
 }
