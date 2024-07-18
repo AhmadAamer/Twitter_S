@@ -13,7 +13,6 @@ export class ContextService {
   async getUser(req) {
     try {
       const token = req.headers?.authorization?.split(' ')[1];
-      //   console.log(token);
       const payload = await this.jwtService.verifyAsync(token, {
         secret: this.config.get<string>('JWT_SECRET'),
       });
