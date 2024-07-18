@@ -1,7 +1,7 @@
 import { Catch, ArgumentsHost, HttpException, Logger } from '@nestjs/common';
 import { GqlExceptionFilter, GqlArgumentsHost } from '@nestjs/graphql';
 import { ApolloError } from 'apollo-server-errors';
-import { I18nContext, I18nService } from 'nestjs-i18n';
+import { I18nService } from 'nestjs-i18n';
 
 @Catch()
 export class AllExceptionsFilter implements GqlExceptionFilter {

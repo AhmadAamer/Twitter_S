@@ -1,7 +1,13 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import {
+  ExecutionContext,
+  Injectable,
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+} from '@nestjs/common';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { GraphQLModule } from '@nestjs/graphql';
+import { Context, GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { join } from 'path';
 import { UsersModule } from './users/users.module';
@@ -19,16 +25,16 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLError, GraphQLFormattedError } from 'graphql';
 import { DataloaderModule } from './dataloader/dataloader.module';
 import { DataloaderService } from './dataloader/dataloader.service';
-import {
-  AcceptLanguageResolver,
-  HeaderResolver,
-  I18nModule,
-  QueryResolver,
-} from 'nestjs-i18n';
+import { AcceptLanguageResolver, I18nModule, QueryResolver } from 'nestjs-i18n';
 import * as path from 'path';
-import { watch } from 'fs';
 import { FollowModule } from './follow/follow.module';
 import { Follow } from './follow/entities/follow.entity';
+
+import { RoleModule } from './role/role.module';
+import { Role } from './role/role.entity';
+import { ContextModule } from './context/context.module';
+import { ContextService } from './context/context.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -46,7 +52,7 @@ import { Follow } from './follow/entities/follow.entity';
           port: config.get<number>('DB_PORT'),
           password: config.get<string>('DB_PASSWORD'),
           username: config.get<string>('DB_USERNAME'),
-          entities: [User, Tweet, Attachment, Like, Comment, Follow],
+          entities: [User, Tweet, Attachment, Like, Comment, Follow, Role],
           database: 'twitter_s',
           synchronize: true,
           logging: false,
@@ -55,14 +61,18 @@ import { Follow } from './follow/entities/follow.entity';
     }),
     GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      imports: [DataloaderModule],
-      useFactory: (dataloaderService: DataloaderService) => {
+      imports: [DataloaderModule, ContextModule],
+      useFactory: (
+        dataloaderService: DataloaderService,
+        contextService: ContextService,
+      ) => {
         return {
           autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
           context: ({ req, res }) => ({
             req,
             res,
             loaders: dataloaderService.getLoaders(),
+            user: contextService.getUser(req),
           }),
           formatError: (error: GraphQLError): GraphQLFormattedError => {
             const graphQLFormattedError: GraphQLFormattedError = {
@@ -79,7 +89,7 @@ import { Follow } from './follow/entities/follow.entity';
           },
         };
       },
-      inject: [DataloaderService],
+      inject: [DataloaderService, ContextService],
     }),
     I18nModule.forRoot({
       fallbackLanguage: 'en',
@@ -100,8 +110,10 @@ import { Follow } from './follow/entities/follow.entity';
     AttachmentsModule,
     DataloaderModule,
     FollowModule,
+    RoleModule,
+    ContextModule,
   ],
-  providers: [AppService],
+  providers: [AppService, ContextService, JwtService],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

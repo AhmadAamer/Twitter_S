@@ -2,13 +2,14 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Comment } from 'src/comments/comment.entity';
 import { Follow } from 'src/follow/entities/follow.entity';
 import { Like } from 'src/likes/like.entity';
+import { Role } from 'src/role/role.entity';
 import { Tweet } from 'src/tweets/tweet.entity';
 
 import {
   Column,
   CreateDateColumn,
   Entity,
-  ManyToMany,
+  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -72,4 +73,8 @@ export class User {
   @Field(() => [Follow], { nullable: true })
   @OneToMany(() => Follow, (follow) => follow.following)
   followings?: Follow[];
+
+  @Field(() => Role)
+  @ManyToOne(() => Role, (role) => role.users)
+  role?: number;
 }

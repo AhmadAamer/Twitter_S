@@ -18,6 +18,7 @@ import { Comment } from 'src/comments/comment.entity';
 import { IDataloaders } from 'src/dataloader/dataloader.interface';
 import { generateGqlResponse } from 'src/utils/gql-general-res';
 import { Tweet } from 'src/tweets/tweet.entity';
+import { UserGuard } from 'src/auth/guards/user-guard';
 
 export const GqlUserResponse = generateGqlResponse(User);
 export const GqlUsersResponse = generateGqlResponse(Array(User), true);
@@ -35,6 +36,12 @@ export class UsersResolver {
       data: users,
     };
   }
+
+  @Query(() => [User])
+  async admins() {
+    return await this.usersService.getAdmins();
+  }
+
   @Query(() => GqlUserResponse)
   async user(@Args('id') id: number) {
     const user = await this.usersService.findUserById(id);

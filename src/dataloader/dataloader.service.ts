@@ -5,6 +5,7 @@ import { IDataloaders } from './dataloader.interface';
 import { Comment } from 'src/comments/comment.entity';
 import { Tweet } from 'src/tweets/tweet.entity';
 import { TweetsService } from 'src/tweets/tweets.service';
+import { UsersService } from 'src/users/users.service';
 @Injectable()
 export class DataloaderService {
   constructor(
@@ -12,6 +13,9 @@ export class DataloaderService {
     private tweetsService: TweetsService,
   ) {}
 
+  getUser(req) {
+    console.log(req.headers.fromAuthHeaderAsBearerToken);
+  }
   getLoaders(): IDataloaders {
     const commentsDataloader = this._createCommentsLoader();
     const tweetsDataloader = this._createTweetsLoader();

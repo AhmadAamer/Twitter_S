@@ -19,6 +19,8 @@ class UpdateUserAttrInput {
 
   @Field({ nullable: true })
   gender?: string;
+  @Field({ nullable: true })
+  role?: number;
 }
 
 @InputType()

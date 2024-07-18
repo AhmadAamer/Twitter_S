@@ -19,13 +19,6 @@ export class AuthResolver {
   async login(
     @Args('loginBody') loginBody: LoginUserDto,
   ): Promise<RegisterAndSignInResponse> {
-    const user = await this.authService.validateUser(
-      loginBody.email,
-      loginBody.password,
-    );
-    if (!user) {
-      throw new Error('Invalid credentials');
-    }
-    return this.authService.login(user);
+    return await this.authService.login(loginBody);
   }
 }

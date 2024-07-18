@@ -50,6 +50,13 @@ type Follow {
   following: User!
 }
 
+type Role {
+  id: Int!
+  name: String!
+  permissions: [String!]!
+  users: [User!]
+}
+
 type User {
   id: Int!
   name: String!
@@ -64,6 +71,7 @@ type User {
   comments: [Comment!]!
   followers: [Follow!]
   followings: [Follow!]
+  role: Role!
 }
 
 type GqlUserResponse {
@@ -100,6 +108,7 @@ type Query {
   tweets: [Tweet!]!
   tweet(id: Float!): Tweet!
   users: GqlUsersResponse!
+  admins: [User!]!
   user(id: Float!): GqlUserResponse!
   follows: GqlFollowsResponse!
 }
@@ -108,6 +117,7 @@ type Mutation {
   addComment(addCommentInput: AddCommentInput!): Comment!
   addTweet(addTweetInput: AddTweetInput!): Tweet!
   updateTweet(updateTweetInput: UpdateTweetInput!): Tweet!
+  addRole(roleInput: RoleInputDto!): Role!
   addUser(AddUserInput: AddUserInput!): GqlUserResponse!
   removeUser(userId: Float!): User!
   updateUser(updateUserInput: UpdateUserInput!): User!
@@ -140,6 +150,11 @@ input UpdateTweetAttrInput {
   content: String
 }
 
+input RoleInputDto {
+  name: String!
+  permissions: [String!]!
+}
+
 input AddUserInput {
   name: String!
   email: String!
@@ -158,6 +173,7 @@ input UpdateUserAttrInput {
   country: String
   phoneNumber: String
   gender: String
+  role: Float
 }
 
 input RegisterUserDto {

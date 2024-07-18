@@ -6,6 +6,11 @@ export class RegisterAndSignInResponse {
   @IsString()
   @Field()
   access_token: String;
+
+  // @IsString()
+  // @Field()
+  // refresh_token: String;
+
   @Field()
   user?: User;
 }

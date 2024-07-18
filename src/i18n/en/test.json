@@ -20,5 +20,7 @@
   "HTTP_SERVICE_UNAVAILABLE": "Service Unavailable",
   "HTTP_GATEWAY_TIMEOUT": "Gateway Timeout",
   "HTTP_HTTP_VERSION_NOT_SUPPORTED": "HTTP Version Not Supported",
-  "HTTP_CHOOSE ANOTHER EMAIL": "choose another email"
+  "HTTP_CHOOSE_ANOTHER_EMAIL": "choose another email",
+  "HTTP_PASSWORD_IS_REQUIRED": "enter ur password",
+  "HTTP_FORBIDDEN_RESOURCE": "Forbidden resource"
 }
